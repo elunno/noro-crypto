@@ -31,11 +31,23 @@ import { buildPriceBars, computeGreenRate, buildVolumeBars } from "@/lib/metrics
 import type { MarketCoin } from "@/types/coingecko";
 
 // UI Components
-import { KpiPrimaryMetrics } from '@/components/dashboard/widgets/KpiPrimaryMetrics';
+import { ExtraMetrics } from "@/components/dashboard/widgets/ExtraMetrics";
+import { BtcPriceChart } from "@/components/dashboard/widgets/BtcPriceChart";
+import { GreenDaysGauge } from "@/components/dashboard/widgets/GreenDaysGauge";
+import { TopCoinsTable } from "@/components/dashboard/widgets/TopCoinsTable";
+import { MarketShareOverview } from "@/components/dashboard/widgets/MarketShareOverview";
+import { VolumeOverview } from "@/components/dashboard/widgets/VolumeOverview";
+import { KpiPrimaryMetrics } from "@/components/dashboard/widgets/KpiPrimaryMetrics";
 
 // ─────────────────────────────────────────────────────────────
 // Type for computed market share section
 // ─────────────────────────────────────────────────────────────
+
+type MarketShareItem = {
+    id: string;
+    name: string;
+    share: number; // market cap distribution (%)
+};
 
 export default async function Page() {
     /**
@@ -48,9 +60,81 @@ export default async function Page() {
         getMarketChart("bitcoin", 30),
     ]);
 
+    // ─────────────────────────────────────────────
+    // Derived BTC price chart bars (12 sample points)
+    // ─────────────────────────────────────────────
+    const priceBars = buildPriceBars(btcChart.prices, 12);
+
+    // Calculate Green Days % (how many days BTC closed higher)
+    const { greenRate, up, down } = computeGreenRate(btcChart.prices);
+
+    // Volume bar chart (24h trading volume)
+    const volumeBars = buildVolumeBars(topCoins);
+
+    // ─────────────────────────────────────────────
+    // Market Share (Top 5 only)
+    // ─────────────────────────────────────────────
+    const top5 = topCoins.slice(0, 5);
+    const totalTop5Cap = top5.reduce((sum, coin) => sum + (coin.market_cap || 0), 0);
+
+    const marketShare: MarketShareItem[] = top5.map((coin: MarketCoin) => ({
+        id: coin.id,
+        name: coin.name,
+        share: totalTop5Cap ? (coin.market_cap / totalTop5Cap) * 100 : 0,
+    }));
+
+    // ─────────────────────────────────────────────
+    // Extract Extra Stats: Top Gainer / Top Loser / Avg Change
+    // ─────────────────────────────────────────────
+    const coinsWithChange = topCoins.filter((c) => typeof c.price_change_percentage_24h === "number");
+
+    // Top gainer in 24h
+    const topGainer =
+        coinsWithChange
+            .slice()
+            .sort((a, b) => (b.price_change_percentage_24h ?? 0) - (a.price_change_percentage_24h ?? 0))[0] ?? null;
+
+    // Biggest drop in 24h
+    const topLoser =
+        coinsWithChange
+            .slice()
+            .sort((a, b) => (a.price_change_percentage_24h ?? 0) - (b.price_change_percentage_24h ?? 0))[0] ?? null;
+
+    // Average change of top 10 coins
+    const avgChange24h =
+        coinsWithChange.length > 0
+            ? coinsWithChange.reduce((sum, c) => sum + (c.price_change_percentage_24h ?? 0), 0) / coinsWithChange.length
+            : 0;
+
     return (
         <main className="min-h-screen bg-slate-100 p-8 text-slate-900">
-            <KpiPrimaryMetrics data={globalData} />
+            {/* ─── KPI: Primary Market Indicators ─── */}
+            <section className="mb-4 grid gap-4 md:grid-cols-4">
+                <KpiPrimaryMetrics data={globalData} />
+            </section>
+
+            {/* ─── Extra Exchange / Gainer / Loser ─── */}
+            <ExtraMetrics
+                markets={globalData.markets}
+                topGainer={topGainer}
+                topLoser={topLoser}
+                avgChange24h={avgChange24h}
+            />
+
+            {/* ─── BTC Chart + Green Days Gauge ─── */}
+            <section className="mb-6 grid gap-4 lg:grid-cols-3">
+                <BtcPriceChart bars={priceBars} />
+                <GreenDaysGauge greenRate={greenRate} up={up} down={down} />
+            </section>
+
+            {/* ─── Top Coins + Market Share Bar ─── */}
+            <section className="grid gap-4 lg:grid-cols-3">
+                <TopCoinsTable coins={topCoins} />
+                <MarketShareOverview items={marketShare} />
+            </section>
+
+            {/* ─── Top 24h Volume Chart ─── */}
+            <VolumeOverview bars={volumeBars} />
         </main>
     );
 }
