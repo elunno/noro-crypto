@@ -21,9 +21,7 @@ export function GreenDaysGauge({ greenRate, up, down }: GreenDaysGaugeProps) {
           />
           <div className="relative flex h-24 w-24 flex-col items-center justify-center rounded-full bg-white shadow-sm">
             <span className="text-xs text-slate-500">Green Days</span>
-            <span className="text-xl font-bold">
-              {greenRate.toFixed(1)}%
-            </span>
+            <span className="text-xl font-bold">{greenRate.toFixed(1)}%</span>
           </div>
         </div>
 

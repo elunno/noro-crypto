@@ -20,7 +20,6 @@ type Props = {
 export function KpiPrimaryMetrics({ data }: Props) {
   return (
     <>
-
       {/* ─── 1) Total Market Cap ─── */}
       <div className="rounded-xl bg-white p-4 shadow-sm">
         <p className="text-xs font-medium text-slate-500">Total Market Cap</p>
@@ -34,7 +33,6 @@ export function KpiPrimaryMetrics({ data }: Props) {
         </p>
       </div>
 
-
       {/* ─── 2) 24h Trading Volume ─── */}
       <div className="rounded-xl bg-white p-4 shadow-sm">
         <p className="text-xs font-medium text-slate-500">24h Volume</p>
@@ -43,11 +41,8 @@ export function KpiPrimaryMetrics({ data }: Props) {
           ${Math.round(data.total_volume.usd).toLocaleString()}
         </p>
 
-        <p className="mt-1 text-xs text-slate-500">
-          Total traded volume (USD)
-        </p>
+        <p className="mt-1 text-xs text-slate-500">Total traded volume (USD)</p>
       </div>
-
 
       {/* ─── 3) Active Cryptocurrencies ─── */}
       <div className="rounded-xl bg-white p-4 shadow-sm">
@@ -59,11 +54,8 @@ export function KpiPrimaryMetrics({ data }: Props) {
           {data.active_cryptocurrencies.toLocaleString()}
         </p>
 
-        <p className="mt-1 text-xs text-slate-500">
-          Currently listed & active
-        </p>
+        <p className="mt-1 text-xs text-slate-500">Currently listed & active</p>
       </div>
-
 
       {/* ─── 4) BTC Dominance ─── */}
       <div className="rounded-xl bg-white p-4 shadow-sm">
@@ -77,7 +69,6 @@ export function KpiPrimaryMetrics({ data }: Props) {
           ETH: {data.market_cap_percentage.eth.toFixed(1)}%
         </p>
       </div>
-
     </>
   );
 }

@@ -9,15 +9,17 @@ type MarketShareOverviewProps = {
 };
 
 function getColorForCoin(id: string): string {
-  if (id === 'bitcoin') return '#f7931a';
-  if (id === 'ethereum') return '#3c3c3d';
-  return '#22c55e';
+  if (id === "bitcoin") return "#f7931a";
+  if (id === "ethereum") return "#3c3c3d";
+  return "#22c55e";
 }
 
 export function MarketShareOverview({ items }: MarketShareOverviewProps) {
   return (
     <div className="rounded-xl bg-white p-4 shadow-sm">
-      <p className="text-xs font-medium text-slate-500">Market Share Overview</p>
+      <p className="text-xs font-medium text-slate-500">
+        Market Share Overview
+      </p>
       <p className="text-xs text-slate-400">
         Distribution of market cap among top 5 coins
       </p>
@@ -47,9 +49,7 @@ export function MarketShareOverview({ items }: MarketShareOverviewProps) {
                 />
                 <span>{coin.name}</span>
               </div>
-              <span className="font-medium">
-                {coin.share.toFixed(2)}%
-              </span>
+              <span className="font-medium">{coin.share.toFixed(2)}%</span>
             </div>
           ))}
         </div>

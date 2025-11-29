@@ -13,7 +13,9 @@ export function BtcPriceChart({ bars }: BtcPriceChartProps) {
     <div className="rounded-xl bg-white p-4 shadow-sm lg:col-span-2">
       <div className="mb-2 flex items-center justify-between">
         <div>
-          <p className="text-xs font-medium text-slate-500">BTC Price Overview</p>
+          <p className="text-xs font-medium text-slate-500">
+            BTC Price Overview
+          </p>
           <p className="text-sm text-slate-400">Last 30 days (sampled)</p>
         </div>
       </div>

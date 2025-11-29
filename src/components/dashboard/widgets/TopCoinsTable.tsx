@@ -62,13 +62,13 @@ export function TopCoinsTable({ coins }: TopCoinsTableProps) {
                 <td
                   className={`py-2 pr-4 text-xs ${
                     (coin.price_change_percentage_24h ?? 0) >= 0
-                      ? 'text-emerald-600'
-                      : 'text-rose-600'
+                      ? "text-emerald-600"
+                      : "text-rose-600"
                   }`}
                 >
                   {coin.price_change_percentage_24h
                     ? coin.price_change_percentage_24h.toFixed(2)
-                    : '0.00'}
+                    : "0.00"}
                   %
                 </td>
                 <td className="py-2 pr-4 text-xs">
