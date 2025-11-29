@@ -26,23 +26,31 @@
  * This dashboard is designed to demonstrate production-level structure and modularity.
  */
 
+import { getGlobalData, getTopCoins, getMarketChart } from "@/lib/coingecko";
+import { buildPriceBars, computeGreenRate, buildVolumeBars } from "@/lib/metrics";
+import type { MarketCoin } from "@/types/coingecko";
 
 // UI Components
-
+import { KpiPrimaryMetrics } from '@/components/dashboard/widgets/KpiPrimaryMetrics';
 
 // ─────────────────────────────────────────────────────────────
 // Type for computed market share section
 // ─────────────────────────────────────────────────────────────
 
-
-// ─────────────────────────────────────────────────────────────
-// Main Page Component
-// Next.js automatically renders this as <domain.com/>
-// ─────────────────────────────────────────────────────────────
-
 export default async function Page() {
+    /**
+     * Fetch all required data in parallel (faster page load)
+     * These run server-side — no client keys needed.
+     */
+    const [globalData, topCoins, btcChart] = await Promise.all([
+        getGlobalData(),
+        getTopCoins(10),
+        getMarketChart("bitcoin", 30),
+    ]);
+
     return (
         <main className="min-h-screen bg-slate-100 p-8 text-slate-900">
+            <KpiPrimaryMetrics data={globalData} />
         </main>
     );
 }
