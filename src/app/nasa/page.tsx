@@ -1,4 +1,4 @@
-// app/page.tsx
+import Image from "next/image";
 
 /**
  * NASA Space Dashboard example using free NASA Open APIs.
@@ -167,9 +167,13 @@ async function getSolarFlares(days: number): Promise<SolarFlare[]> {
  */
 function flattenNeos(feed: NeoFeedResponse): (NeoObject & { date: string })[] {
   const entries: (NeoObject & { date: string })[] = [];
+
   for (const [date, list] of Object.entries(feed.near_earth_objects)) {
-    list.forEach((obj) => entries.push({ ...obj, date }));
+    list.forEach((obj) => {
+      entries.push({ ...obj, date });
+    });
   }
+
   return entries;
 }
 
@@ -452,10 +456,12 @@ export default async function Page() {
             <div className="md:col-span-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               {featuredApod.media_type === "image" ? (
-                <img
+                <Image
                   src={featuredApod.url}
                   alt={featuredApod.title}
                   className="h-48 w-full rounded-xl object-cover"
+                  width={300}
+                  height={300}
                 />
               ) : (
                 <div className="flex h-48 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-500">

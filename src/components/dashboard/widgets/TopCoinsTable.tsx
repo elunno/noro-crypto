@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type TopCoin = {
   id: string;
   symbol: string;
@@ -44,10 +46,12 @@ export function TopCoinsTable({ coins }: TopCoinsTableProps) {
                 </td>
                 <td className="flex items-center gap-2 py-2 pr-4 text-xs">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={coin.image}
                     alt={coin.name}
                     className="h-5 w-5 rounded-full"
+                    width={100}
+                    height={100}
                   />
                   <div>
                     <p className="text-xs font-medium">{coin.name}</p>
